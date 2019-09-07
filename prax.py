@@ -6,6 +6,7 @@ try:
     values = [int(item) for item in line.split(":")[1].split(",")]
     hsv_min = values[:3]
     hsv_max = values[3:]
+    f.close()
 
 except FileNotFoundError:
     hsv_min = [0, 0, 0]
