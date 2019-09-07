@@ -6,6 +6,7 @@ import config
 import utils
 
 color_name = input("Color name: ")
+print("Select color range and press s to save, q to quit")
 
 try:
     color_range = config.get_color_range(color_name)

@@ -3,8 +3,15 @@ import config
 import utils
 
 
-ball_color = config.get_color_range("ball")
-basket_color = config.get_color_range("purple")
+try:
+    ball_color = config.get_color_range("ball")
+except KeyError:
+    exit("Ball color has not been thresholded, run threshold.py")
+
+try:
+    basket_color = config.get_color_range("purple")
+except KeyError:
+    exit("Purple color has not been thresholded, run threshold.py")
 
 cap = cv2.VideoCapture(0)
 
