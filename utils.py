@@ -9,6 +9,6 @@ def apply_color_mask(src, color_range):
 
     # Remove noise (Google opencv morphological transformations)
     kernel = np.ones((3, 3), np.uint8)
-    less_noise = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
+    less_noise = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
     
     return less_noise

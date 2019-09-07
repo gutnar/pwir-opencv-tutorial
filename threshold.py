@@ -1,5 +1,4 @@
 import cv2
-import numpy as np
 from functools import partial
 
 import config
