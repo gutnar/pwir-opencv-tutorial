@@ -6,6 +6,7 @@ config.read("config.ini")
 if not "colors" in config.sections():
     config["colors"] = { }
 
+
 def get_color_range(color):
     values = config["colors"][color].split(",")
     values = [int(value) for value in values]

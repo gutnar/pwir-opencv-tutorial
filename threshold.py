@@ -3,7 +3,7 @@ import numpy as np
 from functools import partial
 
 import config
-
+import utils
 
 color_name = input("Color name: ")
 
@@ -20,27 +20,21 @@ def update_range(i, j, value):
     color_range[i][j] = value
 
 cv2.namedWindow("frame")
-cv2.createTrackbar("h_min", "frame", 0, 179, partial(update_range, 0, 0))
-cv2.createTrackbar("h_max", "frame", 179, 179, partial(update_range, 1, 0))
-cv2.createTrackbar("s_min", "frame", 0, 255, partial(update_range, 0, 1))
-cv2.createTrackbar("s_max", "frame", 255, 255, partial(update_range, 1, 1))
-cv2.createTrackbar("v_min", "frame", 0, 255, partial(update_range, 0, 2))
-cv2.createTrackbar("v_max", "frame", 255, 255, partial(update_range, 1, 2))
+cv2.createTrackbar("h_min", "frame", color_range[0][0], 179, partial(update_range, 0, 0))
+cv2.createTrackbar("s_min", "frame", color_range[0][1], 255, partial(update_range, 0, 1))
+cv2.createTrackbar("v_min", "frame", color_range[0][2], 255, partial(update_range, 0, 2))
+cv2.createTrackbar("h_max", "frame", color_range[1][0], 179, partial(update_range, 1, 0))
+cv2.createTrackbar("s_max", "frame", color_range[1][1], 255, partial(update_range, 1, 1))
+cv2.createTrackbar("v_max", "frame", color_range[1][2], 255, partial(update_range, 1, 2))
 
 cap = cv2.VideoCapture(0)
 
 while cap.isOpened():
     _, frame = cap.read()
     cv2.imshow("frame", frame)
-    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-    mask = cv2.inRange(hsv, tuple(color_range[0]), tuple(color_range[1]))
-    cv2.imshow("mask", mask)
 
-    # Remove noise
-    kernel = np.ones((5, 5), np.uint8)
-    eroded = cv2.erode(mask, kernel)
-    dilated = cv2.dilate(mask, kernel)
-    cv2.imshow("less noise", dilated)
+    mask = utils.apply_color_mask(frame, color_range)
+    cv2.imshow("mask", mask)
 
     # Keyboard input
     key = cv2.waitKey(10)
