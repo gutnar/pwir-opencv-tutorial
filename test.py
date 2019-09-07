@@ -5,6 +5,7 @@
 # 5. Draw a circle around your ball
 
 import cv2
+import numpy as np
 import sys
 from functools import partial
 
@@ -47,8 +48,10 @@ while cap.isOpened():
     cv2.imshow("mask", mask)
 
     # Remove noise
-    eroded = cv2.erode(mask, (5, 5))
-    cv2.imshow("eroded")
+    kernel = np.ones((5, 5), np.uint8)
+    eroded = cv2.erode(mask, kernel)
+    dilated = cv2.dilate(mask, kernel)
+    cv2.imshow("less noise", dilated)
 
     # Keyboard input
     key = cv2.waitKey(10)
