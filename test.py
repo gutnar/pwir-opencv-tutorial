@@ -21,14 +21,11 @@ while cap.isOpened():
     ball_mask = utils.apply_color_mask(frame, ball_color)
     basket_mask = utils.apply_color_mask(frame, basket_color)
 
-    contours, hierarchy = cv2.findContours(ball_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    circles = map(cv2.minEnclosingCircle, contours)
-    circles = sorted(circles, key = lambda circle: circle[1])
+    biggest_ball = utils.find_biggest_circle(ball_mask)
 
-    if len(circles):
-        biggest_circle = circles[-1]
-        (x, y), radius = biggest_circle
-        cv2.circle(frame, (int(x), int(y)), int(radius), utils.get_color_range_mean(ball_color), 5)
+    if biggest_ball is not None:
+        (x, y), radius = biggest_ball
+        cv2.circle(frame, (x, y), radius, utils.get_color_range_mean(ball_color), 5)
 
     cv2.imshow("frame", frame)
 

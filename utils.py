@@ -19,3 +19,13 @@ def apply_color_mask(src, color_range):
     less_noise = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
     
     return less_noise
+
+
+def find_biggest_circle(src):
+    contours, _hierarchy = cv2.findContours(src, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    circles = map(cv2.minEnclosingCircle, contours)
+    circles = sorted(circles, key = lambda circle: circle[1])
+
+    if len(circles):
+        (x, y), radius = circles[-1]
+        return (int(x), int(y)), int(radius)
