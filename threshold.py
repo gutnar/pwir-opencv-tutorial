@@ -1,9 +1,3 @@
-# 1. Capture frames from camera
-# 2. Threshold colors for ball
-# 3. Maybe try to remove noise
-# 4. Use blob detection to locate balls
-# 5. Draw a circle around your ball
-
 import cv2
 import numpy as np
 from functools import partial
