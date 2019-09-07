@@ -6,29 +6,24 @@
 
 import cv2
 import numpy as np
-import sys
 from functools import partial
 
-ranges = [
-    [0, 0, 0],
-    [179, 255, 255]
-]
+import config
 
-if len(sys.argv) < 2:
-    exit("Enter color name")
 
-color_name = sys.argv[1]
+color_name = input("Color name: ")
 
-with open("colors.csv", "r") as file:
-    for line in file:
-        data = line.split(",")
+try:
+    color_range = config.get_color_range(color_name)
+except KeyError:
+    color_range = [
+        [0, 0, 0],
+        [179, 255, 255]
+    ]
 
-        if data[0] == color_name:
-            ranges[0] = [int(i) for i in data[1:4]]
-            ranges[1] = [int(i) for i in data[4:]]
 
 def update_range(i, j, value):
-    ranges[i][j] = value
+    color_range[i][j] = value
 
 cv2.namedWindow("frame")
 cv2.createTrackbar("h_min", "frame", 0, 179, partial(update_range, 0, 0))
@@ -44,7 +39,7 @@ while cap.isOpened():
     _, frame = cap.read()
     cv2.imshow("frame", frame)
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-    mask = cv2.inRange(hsv, tuple(ranges[0]), tuple(ranges[1]))
+    mask = cv2.inRange(hsv, tuple(color_range[0]), tuple(color_range[1]))
     cv2.imshow("mask", mask)
 
     # Remove noise
@@ -57,10 +52,7 @@ while cap.isOpened():
     key = cv2.waitKey(10)
 
     if key & 0xFF == ord("s"):
-        with open("colors.csv", "a") as file:
-            file.write(color_name + ",")
-            file.write(",".join([str(i) for i in sum(ranges, [])]))
-            file.write("\n")
+        config.set_color_range(color_name, color_range[0], color_range[1])
 
     if key & 0xFF == ord("q"):
         break
